@@ -1,0 +1,294 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TDEE & Macro Calculator</title>
+</head>
+<body>
+  <h1>TDEE & Macronutrient Calculator</h1>
+
+  <!-- Input Fields -->
+  <div>
+    <label for="unit-system">Unit System:</label>
+    <select id="unit-system">
+      <option value="metric">Metric</option>
+      <option value="imperial">Imperial</option>
+    </select>
+  </div>
+  <div>
+    <label for="gender">Gender:</label>
+    <select id="gender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </div>
+  <div>
+    <label for="age">Age:</label>
+    <input id="age" type="number" />
+  </div>
+  <div>
+    <label for="weight">Weight:</label>
+    <input id="weight" type="number" />
+  </div>
+  <div>
+    <label for="height">Height:</label>
+    <input id="height" type="number" />
+  </div>
+  <div>
+    <label for="bodyfat">Body Fat % (optional):</label>
+    <input id="bodyfat" type="number" />
+  </div>
+  <div>
+    <label for="activity">Activity Level:</label>
+    <select id="activity">
+      <option value="1.2">Sedentary</option>
+      <option value="1.375">Lightly Active</option>
+      <option value="1.55">Moderately Active</option>
+      <option value="1.725">Very Active</option>
+      <option value="1.9">Extra Active</option>
+    </select>
+  </div>
+  <div>
+    <label for="goal">Goal:</label>
+    <select id="goal">
+      <option value="recomp">Recomposition</option>
+      <option value="fat_loss">Fat Loss</option>
+      <option value="gain">Weight Gain</option>
+    </select>
+  </div>
+  <div>
+    <label for="protein">Protein (g/kg): <span id="protein-value">1.8</span></label>
+    <input id="protein" type="range" min="1.2" max="2.6" step="0.1" value="1.8" />
+  </div>
+  <div>
+    <label for="carbs">Carbs (grams):</label>
+    <input id="carbs" type="number" value="200" />
+  </div>
+
+  <button id="calc-btn">Calculate</button>
+
+  <pre id="result" style="margin-top:20px;"></pre>
+<style>
+  .calculator-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    background: #000;
+  }
+
+  .calculator {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
+  }
+
+  .calculator h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .calculator label {
+    display: block;
+    margin: 12px 0 6px;
+    font-weight: bold;
+  }
+
+  .calculator input,
+  .calculator select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 6px;
+    background: #000;
+    color: #fff;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  .calculator button {
+    margin-top: 20px;
+    width: 100%;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s ease;
+  }
+
+  .calculator button:hover {
+    background: #ccc;
+  }
+
+  .calculator .result {
+    margin-top: 20px;
+    white-space: pre-line;
+    background: #1a1a1a;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+</style>
+
+<div class="calculator-wrapper">
+  <div class="calculator">
+    <h2>BASED Macro Calculator</h2>
+
+    <label for="unit-system">Unit System:</label>
+    <select id="unit-system">
+      <option value="metric">Metric (kg/cm)</option>
+      <option value="imperial">Imperial (lbs/in)</option>
+    </select>
+
+    <label for="weight">Weight:</label>
+    <input required step="0.1" min="1" id="weight" type="number">
+
+    <label for="height">Height:</label>
+    <input required step="0.1" min="1" id="height" type="number">
+
+    <label for="age">Age (years):</label>
+    <input required min="1" id="age" type="number">
+
+    <label for="gender">Gender:</label>
+    <select required id="gender">
+      <option selected disabled value="">Select gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+
+    <label for="bodyfat">Body Fat % (optional):</label>
+    <input placeholder="Leave empty if unknown" step="0.1" max="60" min="0" id="bodyfat" type="number">
+
+    <label for="activity">Activity Level:</label>
+    <select required id="activity">
+      <option selected disabled value="">Select activity level</option>
+      <option value="1.2">Sedentary (little or no exercise)</option>
+      <option value="1.375">Lightly active (1-3 days/week)</option>
+      <option value="1.55">Moderately active (3-5 days/week)</option>
+      <option value="1.725">Very active (6-7 days/week)</option>
+      <option value="1.9">Extra active (very intense exercise)</option>
+    </select>
+
+    <label for="goal">Goal:</label>
+    <select required id="goal">
+      <option selected disabled value="">Select goal</option>
+      <option value="fat_loss">Fat Loss</option>
+      <option value="maintain">Recomp</option>
+      <option value="gain">Gain</option>
+    </select>
+
+    <label for="protein">Protein (g/kg): <span id="protein-value">2.0</span></label>
+    <input value="2.0" step="0.1" max="3" min="1.5" id="protein" type="range">
+
+    <label for="carbs">Carbs (grams per day):</label>
+    <input required value="150" step="1" min="0" id="carbs" type="number">
+
+    <button id="calc-btn">Calculate</button>
+
+    <div id="result" class="result"></div>
+  </div>
+</div>
+
+<script>
+  // Update protein label dynamically
+  document.getElementById('protein').addEventListener('input', e => {
+    document.getElementById('protein-value').textContent = e.target.value;
+  });
+
+  // Update unit labels on change
+  function updateUnitLabels() {
+    const unit = document.getElementById('unit-system').value;
+    document.querySelector("label[for='weight']").innerText = `Weight: ${unit === 'imperial' ? '(lbs)' : '(kg)'}`;
+    document.querySelector("label[for='height']").innerText = `Height: ${unit === 'imperial' ? '(in)' : '(cm)'}`;
+  }
+  document.getElementById('unit-system').addEventListener('change', updateUnitLabels);
+  updateUnitLabels();
+
+  function calculateMacros() {
+    const unit = document.getElementById('unit-system').value;
+    const weightInput = parseFloat(document.getElementById('weight').value);
+    const heightInput = parseFloat(document.getElementById('height').value);
+    const age = parseInt(document.getElementById('age').value);
+    const gender = document.getElementById('gender').value;
+    const activityLevel = parseFloat(document.getElementById('activity').value);
+    const goal = document.getElementById('goal').value;
+    const proteinPerKg = parseFloat(document.getElementById('protein').value);
+    const carbsGrams = parseInt(document.getElementById('carbs').value);
+    const bodyFatInput = parseFloat(document.getElementById('bodyfat').value);
+
+    if (
+      !weightInput || !heightInput || !age || !gender || !activityLevel || !goal || isNaN(proteinPerKg) || isNaN(carbsGrams)
+    ) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    // Convert to metric if imperial
+    let weightKg = weightInput;
+    let heightCm = heightInput;
+    if (unit === 'imperial') {
+      weightKg = weightInput * 0.453592;
+      heightCm = heightInput * 2.54;
+    }
+
+    let bmr;
+    if (!isNaN(bodyFatInput) && bodyFatInput >= 0 && bodyFatInput <= 60) {
+      // Katch-McArdle formula
+      const lbm = weightKg * (1 - bodyFatInput / 100);
+      bmr = 370 + 21.6 * lbm;
+    } else {
+      // Mifflin-St Jeor formula
+      if (gender === 'male') {
+        bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
+      } else {
+        bmr = 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
+      }
+    }
+
+    // TDEE
+    const tdeeBase = bmr * activityLevel;
+
+    // Adjust calories based on goal
+    let calorieAdjustment = 0;
+    let tdeeLabel = 'TDEE for Recomp';
+    if (goal === 'fat_loss') {
+      calorieAdjustment = -0.20;
+      tdeeLabel = 'TDEE for Fat Loss';
+    } else if (goal === 'gain') {
+      calorieAdjustment = 0.15;
+      tdeeLabel = 'TDEE for Weight Gain';
+    }
+
+    const adjustedCalories = tdeeBase * (1 + calorieAdjustment);
+
+    // Macronutrient calculations
+    const proteinGrams = proteinPerKg * weightKg;
+    const caloriesFromProtein = proteinGrams * 4;
+    const caloriesFromCarbs = carbsGrams * 4;
+    const caloriesFromFat = adjustedCalories - (caloriesFromProtein + caloriesFromCarbs);
+    const fatGrams = Math.max(0, caloriesFromFat / 9);
+
+    // Display results
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerText =
+      `${tdeeLabel}: ${adjustedCalories.toFixed(0)} kcal\n\n` +
+      `Macros per day:\n` +
+      `- Protein: ${proteinGrams.toFixed(1)} g\n` +
+      `- Carbs: ${carbsGrams} g\n` +
+      `- Fat: ${fatGrams.toFixed(1)} g`;
+  }
+
+  document.getElementById('calc-btn').addEventListener('click', calculateMacros);
+</script>
+</body>
+</html>
